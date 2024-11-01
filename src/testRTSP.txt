@@ -1,0 +1,1 @@
+rtsp://admin:alert.Away@192.168.0.10/cam/realmonitor?channel=1&subtype=0

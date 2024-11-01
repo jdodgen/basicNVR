@@ -1,0 +1,81 @@
+mod date Aug 2017, 2024
+this is on ubuntu 18.03
+
+make host name "basicnvr'
+user basicnvr password xxxxx
+
+ignore this   ---------- network enp1so and enp3so looks like the pcie card became enp1so
+install with as little as possiable, just required utilities  -- DO NOT select LAMP server too much baggage
+
+use entire disk
+
+only install:
+OpenSSH Server
+
+wait for reboot
+
+login and get the ip address with ifconfig
+
+login as simplnvr foobar
+sudo su
+
+passwd root     --- foobar
+passwd -u root
+
+sudo su
+setterm -blank 0   -- only needed from console
+
+reboot
+
+===================================
+now The basicnvr install starts
+note: all the instalation goes into /root
+
+easiest to do with a remote terminal like Putty
+
+if going remote login as basicnvr and
+
+sudo su   --- to become root
+
+do a "cd" to position you at /root
+cd /root
+
+now pull in the things needed
+
+sftp jim@192.168.1.??    ## currently desk linux machine login as jim foobar
+get Dropbox/source/perl_modules.tar.gz
+get Dropbox/source/simplenvr/loader.pl
+get Dropbox/source/simplenvr/configure.pl
+get Dropbox/source/simplenvr/motion-master.zip
+exit
+
+perl configure.pl
+reboot
+
+
+Notes:
+
+http://212.227.238.151:9003/camera/driveway
+
+the new systemd is scripted ubuntu 15+n
+this auto runs:  vi /etc/init/tty1.conf (ubuntu)  or /etc/inittab (debian)
+## ubuntu --- exec /sbin/mingetty --autologin root tty1  ### pre 15
+## debian --- "1:1234:respawn:/sbin/mingetty --autologin root tty1
+
+reboot #we are done now so just reboot
+additional for booting from compact flash SOMETIMES
+# vi /etc/default/grub.
+GRUB_CMDLINE_LINUX=�libata.dma=3?
+then
+
+# update grub
+Add libata.dama=0 in this file:
+
+root@ismo:~# cat /etc/grub.d/40_custom
+#!/bin/sh
+exec tail -n +3 $0
+# This file provides an easy way to add custom menu entries.  Simply type the
+# menu entries you want to add after this comment.  Be careful not to change
+# the 'exec tail' line above.
+libata.dma=0
+root@ismo:~#
