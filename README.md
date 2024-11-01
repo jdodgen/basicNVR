@@ -1,4 +1,4 @@
-# basicNVR a symplified low overhead recorder
+# basicNVR a symplified low overhead nework video recorder
       
 ### Summary:
 
