@@ -2,7 +2,7 @@
       
 ### Summary:
 
-basicNVR is a lightweight Network Video Recorder (NVR) built around the popular motion software.    
+basicNVR is a lightweight Network Video Recorder (NVR) built around the popular [motion](https://motion-project.github.io/) repository.    
 It simplifies recording and managing video streams from IP cameras.    
 It offers features like:    
 Motion detection recording    
@@ -10,7 +10,7 @@ File management with automatic deletion
 SQLite database for recording information    
 User interface for browsing recordings    
 Admin interface for configuration    
-HTTP access for streaming JPEGs (used by [AlertAway](https://github.com/jdodgen/MQTT-home/tree/main/linux/alertaway) for example)   
+HTTP access for streaming JPEGs (used by [AlertAway](https://github.com/jdodgen/MQTT-home/tree/main/linux/alertaway) for example)  
 
 exmple system screen shots: [basicNVR.com](http://basicNVR.com)
    
