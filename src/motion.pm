@@ -1,12 +1,6 @@
 package motion;
 # Copyright 2011, 2015 by James E Dodgen Jr.  MIT Licence
 
-## Sending email with attachments is a little trickier since we have to construct multi-part messages.
-## The Net::SMTP::Multipart module provides a wrapper around Net::SMTP (but not Net::SMTP::SSL)
-## to support attachments, but I don't like the syntax it requires and lack of MIME types guessing so
-## I extracted the core logic from that module into the example below:
-#camera passwords alert.Away
-
 #for sv3c
 #snapshot http://192.168.0.15/cgi-bin/hi3510/param.cgi?cmd=snap&-getpic
 
