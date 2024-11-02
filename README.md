@@ -10,7 +10,7 @@ File management with automatic deletion
 SQLite database for recording information    
 User interface for browsing recordings    
 Admin interface for configuration    
-HTTP API access for streaming JPEGs (used by [AlertAway](https://github.com/jdodgen/MQTT-home/tree/main/linux/alertaway) for example)  
+HTTP API access for getting JPEGs (used by [AlertAway](https://github.com/jdodgen/MQTT-home/tree/main/linux/alertaway) for example)  
 
 exmple system screen shots: [basicNVR.com](http://basicNVR.com)
    
