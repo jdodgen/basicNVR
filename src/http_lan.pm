@@ -1,5 +1,5 @@
 package http_lan;
-# Copyright 2011,2012 by James E Dodgen Jr.  All rights reserved.
+# Copyright 2011,2012 by James E Dodgen Jr.  MIT licence
 use Data::Dumper;
 use IO::Socket;
 use HTML::Template;
