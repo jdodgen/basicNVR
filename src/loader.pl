@@ -9,10 +9,10 @@ use Data::Dumper;
 my constant $retry_delay_time = 10;
 my constant $run_dir      =  '/simplenvr';
 
-
-use constant FTP_SITE     => 'alertaway.com';
-use constant FTP_USER     => 'alerta';
-use constant FTP_PASSWORD => 'R1kjed';
+# make these the same as cfg.pm
+use constant FTP_SITE     => '????';
+use constant FTP_USER     => '???';
+use constant FTP_PASSWORD => '???';
 use constant FTP_PORT     => 9005;
 
 # my $ftp_site = $ftp_site1;
