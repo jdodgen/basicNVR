@@ -344,8 +344,8 @@ EOF
     cameras.movie_output, cameras.motion_area_detect, cameras.rotate_image, coalesce(cameras.width,'640'),coalesce(cameras.height,'480'),
     camera_template.netcam_url
     FROM cameras
-    JOIN camera_type ON camera_type.name = cameras.server
-    JOIN camera_template ON camera_type.tid = camera_template.tid 
+    LEFT JOIN camera_type ON camera_type.name = cameras.server
+    LEFT JOIN camera_template ON camera_type.tid = camera_template.tid 
     ORDER BY cameras.camera_name
 EOF
    ( qw (camera_nbr camera_name server port wan_access ip_addr user password options movie_output motion_area_detect rotate_image width height url) ));
