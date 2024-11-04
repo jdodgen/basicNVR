@@ -13,10 +13,10 @@ use constant DEFAULT_SERVER_PORT => 9000;
 use constant SERVICE_PORT => 9002;
 use constant EXTERNAL_PORT => 9003;
 use constant TIMEDATECTL => "/usr/bin/timedatectl";
-use constant FTP_SITE     => 'basicNVR.com';
+use constant FTP_SITE     => 'yourserver.com';
 use constant FTP_USER     => 'xxx';
 use constant FTP_PASSWORD => 'xxx';
-use constant BASENAME => 'basicnvrnvr';
+use constant BASENAME => 'basicnvr';
 
 # FTP/SSH stuff
 use constant FTP_PORT     => 9005;
