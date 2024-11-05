@@ -110,8 +110,8 @@ sub fix_bashrc
      my $tail = <<EOF;
 echo
 echo '********************************************'
-echo 'this is the simpleNVR start up'
-echo 'Copyright 2021 Jim Dodgen'
+echo 'this is the basicNVR start up'
+echo 'Copyright 2021, 2024 Jim Dodgen MIT Licence'
 echo 'control C to interupt now'
 umask 0000
 preload

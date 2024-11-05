@@ -5,7 +5,7 @@ make host name "basicnvr'
 user basicnvr password xxxxx
 
 ignore this   ---------- network enp1so and enp3so looks like the pcie card became enp1so
-install with as little as possiable, just required utilities  -- DO NOT select LAMP server too much baggage
+install with as little as possible, just required utilities  -- DO NOT select LAMP server too much baggage
 
 use entire disk
 
@@ -16,7 +16,7 @@ wait for reboot
 
 login and get the ip address with ifconfig
 
-login as simplnvr foobar
+login as basicnvr foobar
 sudo su
 
 passwd root     --- foobar
