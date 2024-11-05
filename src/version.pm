@@ -1,3 +1,3 @@
 package version;
-use constant VERSION => 39;
+use constant VERSION => 40;
 1;
