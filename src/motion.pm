@@ -155,7 +155,7 @@ sub create_motion_configs
     FROM cameras
     JOIN camera_type ON camera_type.name = cameras.server
     JOIN camera_template ON camera_type.tid = camera_template.tid
-    WHERE (camera_name NOT NULL OR camera_name <> "")
+    WHERE (camera_name NOT NULL OR camera_name <> "") and (ip_addr NOT NULL OR ip_addr <> "")
 EOF
           (qw(camera_nbr camera_name server ip_addr port user password options movie_output motion_area_detect rotate_image width height
                netcam_url netcam_keepalive)));
