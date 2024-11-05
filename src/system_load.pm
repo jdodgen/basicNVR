@@ -6,7 +6,7 @@ sub get
 {
     my ($t) = @_;
     my $lscpu = `lscpu`;
-    $lscpu =~ /socket\:.*([0-9]+)/;
+    $lscpu =~ /CPU\(s\)\:.*([0-9]+)/;
     my $cores = $1;
     #print"cores = $1\n";
     my $uptime = `uptime`;
