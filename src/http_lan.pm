@@ -1,5 +1,5 @@
 package http_lan;
-# Copyright 2011,2012 by James E Dodgen Jr.  MIT licence
+# Copyright 2011,2012,2024 by James E Dodgen Jr.  MIT Licence
 use Data::Dumper;
 use IO::Socket;
 use HTML::Template;
@@ -538,6 +538,8 @@ sub template
 			
 			my($stat, $last_tid) = $dt->get_rec("select max(tid) from camera_template");
 			$dt->do("insert into camera_type (tid, name) values(%s,%s)", $last_tid, $form{'add_camera_template_name'});
+            $dt->do("insert into camera_template (tid, netcam_url, netcam_keepalive) values(%s,%s,%s)",
+                 $last_tid, $form{'add_camera_template_url'}, $form{'add_keepalive'};
 			
 			#$last_tid, $form{'add_camera_template_url'}, $form{'add_keepalive'};
 		
