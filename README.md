@@ -20,16 +20,18 @@ The system is currently running successfully for several years on an Intel J5005
 It manages 7 PoE IP cameras.   
 The website (basicNVR.com) is registered.    
    
-### Planned Changes:
+### Planned big changes:
 
 Implement pass-through streaming in motion (possibly using motionplus)     
 Develop a tool (HTML) for creating "motion control masks"    
-Switch internal communication from HTTP to MQTT (a lightweight messaging protocol)    
+Add internal communication to MQTT in addition to current HTTP.     
 Improve the user interface    
-Design website content for basicNVR.com    
+Design website content for basicNVR.com   
+
 ### Additional Notes:
 
-The system has gone through several iterations, starting with USB webcams and coaxial CCTV cameras before transitioning to fully utilizing ONVIF/RTSP cameras.   
+This system has gone through several iterations, starting with USB webcams and coaxial CCTV cameras before transitioning to fully utilizing ONVIF/RTSP cameras.
+Some legacy stuff can still be used but may go away.
 
 
 
