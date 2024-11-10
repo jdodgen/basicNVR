@@ -59,7 +59,9 @@ end of known configurations, add more as found
 now test and debug
  
 this will be run a few times as you debug the whole configuration
-```sshpass -p <password> ssh -vNR 0.0.0.0:9003:localhost:9003  jim@<remote ip address>```
+```
+sshpass -p <password> ssh -vNR 0.0.0.0:9003:localhost:9003  jim@<remote ip address>
+```
 
 when you have a clean ssh -- now test with simple query.
 
@@ -72,7 +74,9 @@ incomplete configuration causes ssh to go into a never ending loop
 Change the ssh to autossh see: [https://www.harding.motd.ca/autossh/]
 #
 Now create a .service file for systemd and place it here: 
-```/etc/systemd/system/autossh-vps-9003.service```
+```
+/etc/systemd/system/autossh-vps-9003.service
+```
 note change "ExitOnForwardFailure=yes"  to "no" after you get it working
 ```
 [Unit]
@@ -110,6 +114,9 @@ when things break
 ```
 sudo systemctl status   autossh-vps-9003.service
 sudo systemctl start   autossh-vps-9003.service
+sudo systemctl restart autossh-vps-9003.service
+sudo systemctl daemon-reload
+```
 
 
 
