@@ -31,8 +31,8 @@ sub get
         $query_tail = qq( AND wan_access = "checked");
     }
 
-    my ( $status, $camera_nbr, $server, $port, $ip_addr, $user, $password, $cfg_options ) = $dt->get_rec( <<EOF, $camera_name);
-        SELECT camera_nbr, server, port, ip_addr, user, password, options FROM cameras WHERE camera_name = %s $query_tail
+    my ( $status, $camera_nbr, $server, $port, $ip_addr, $user, $password) = $dt->get_rec( <<EOF, $camera_name);
+        SELECT camera_nbr, server, port, ip_addr, user, password FROM cameras WHERE camera_name = %s $query_tail
 EOF
     if ( $status == 1 ) # found
     {

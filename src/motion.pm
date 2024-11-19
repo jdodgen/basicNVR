@@ -149,15 +149,14 @@ sub create_motion_configs
     my ($dt) = @_;
     ### note: server value is set in http_processor
     my @cameras = $dt->tmpl_loop_query(<<EOF,
-    SELECT camera_nbr, camera_name, server, ip_addr, port, user, password, options, 
+    SELECT camera_nbr, camera_name, server, ip_addr, port, channel, user, password, 
     movie_output, motion_area_detect, rotate_image, COALESCE(width,640), COALESCE(height,480), 
-    camera_template.netcam_url, camera_template.netcam_keepalive
+    camera_template.stream_url, camera_template.netcam_keepalive
     FROM cameras
-    JOIN camera_type ON camera_type.name = cameras.server
-    JOIN camera_template ON camera_type.tid = camera_template.tid
+    JOIN camera_template ON camera_template.name = cameras.server
     WHERE (camera_name NOT NULL OR camera_name <> "") and (ip_addr NOT NULL OR ip_addr <> "")
 EOF
-          (qw(camera_nbr camera_name server ip_addr port user password options movie_output motion_area_detect rotate_image width height
+          (qw(camera_nbr camera_name server ip_addr port channel user password movie_output motion_area_detect rotate_image width height
                netcam_url netcam_keepalive)));
 
     if (@cameras)
@@ -194,6 +193,7 @@ EOF
 			my $url = $c->{netcam_url};			
 			$url =~ s/\%USER/$c->{user}/;
 			$url =~ s/\%PWD/$c->{password}/;
+            $url =~ s/\%CHANNEL/$c->{channel}/;
 			my $ip;
 			if ($c->{port} eq 'default')
 			{

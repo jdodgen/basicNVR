@@ -344,9 +344,11 @@ my $stuff = <<EOF;
 <tmpl_var name=menu>
 <div class="body"><div class=border>
         <table class="tbody">
-          <tmpl_if name=show_msg>
+          <tmpl_if name=msg>
            <tr class="alert">
-            <th  colspan=100% ><tmpl_var name=msg></th>
+            <th colspan=100% >
+              <tmpl_var name=msg>
+            </th>
            </tr>
           </tmpl_if>
           <tr class="dark">           
@@ -374,32 +376,22 @@ my $stuff = <<EOF;
             <table class="noBorder">
              <tr class="noBorder">
               <td  class="noBorder">
-               <button name="state" value="<tmpl_var name=tid>:delete_type" type="submit">Delete</button>
+               <button name="state" value="<tmpl_var name=name>:delete_template" type="submit">Delete</button>
               </td>
               <td  class="noBorder">
-               <select name="<tmpl_var name=tid>:type" size=2>
-                <tmpl_var name=types>             
-               </select>
+                <b><tmpl_var name=name><b>                           
               </td>
-             </tr>
-             <tr  class="noBorder">
-              <td  class="noBorder">
-               <button name="state" value="<tmpl_var name=tid>:add_type" type="submit">Add</button>
-              </td>
-              <td  class="noBorder">
-              <input type=text name="<tmpl_var name=tid>:name" value="<tmpl_var name=deleted_name>">  
-              </td>               
              </tr>
             </table>         
             </td>            
              <td align=left>
-             <button name="state" value="<tmpl_var name=tid>:update_url" type="submit">Update</button>           
-             <input type=text name="<tmpl_var name=tid>:url"  value="<tmpl_var name=url>" size=100>             
+             <button name="state" value="<tmpl_var name=name>:update_url" type="submit">Update</button>           
+             <input type=text name="<tmpl_var name=name>:url"  value="<tmpl_var name=url>" size=100>             
              </td>
              <td align=left>
-				<input type="radio" id="on" name="<tmpl_var name=tid>:keepalive" value="on"  <tmpl_var name=on_checked>>				
+				<input type="radio" id="on" name="<tmpl_var name=name>:keepalive" value="on"  <tmpl_var name=on_checked>>				
 				<label for="on">on</label> 
-				<input type="radio" id="off" name="<tmpl_var name=tid>:keepalive" value="off" <tmpl_var name=off_checked>  
+				<input type="radio" id="off" name="<tmpl_var name=name>:keepalive" value="off" <tmpl_var name=off_checked>>  
 				<label for="off">off</label>
             </td>                             
           </tr>
@@ -427,7 +419,8 @@ my $stuff = <<EOF;
               <input type=text name="add_camera_template_name"  value="<tmpl_var name=add_name>">
             </td>
             <td align=left>
-             <input type=text name="add_camera_template_url"  size=100, value="<tmpl_var name=add_url>">
+             <b>stream</b>&nbsp<input type=text name="add_camera_template_stream_url"  size=100, value="<tmpl_var name=add_stream_url>">
+              <!--<b>snapshot</b>&nbsp<input type=text name="add_camera_template_snapshot_url"  size=100, value="<tmpl_var name=add_snapshot_url>"> -->
             </td>
             <td align=left>
 				<input type="radio" id="on" name="add_keepalive" value="on" <tmpl_var name=add_on_checked>>				
@@ -530,7 +523,7 @@ my $stuff = <<EOF;
               Camera name<br>&<br>Options
             </th>
             <th>
-              Type<br>Protocol
+              Protocol
             </th>
             <th>
               ADDR
@@ -586,12 +579,14 @@ my $stuff = <<EOF;
             </td>
             <td align=left>
               <center>
-               <b><tmpl_var name=server></b><br><br>
+               <!-- <b><tmpl_var name=server></b><br><br> -->
                <select name=<tmpl_var name=camera_nbr>:server>
                 <tmpl_var name=servers>             
-               </select>
-               <br><br>
-               <b><tmpl_var name=protocol></b>
+               </select><tmpl_var name=protocol>
+               <br><b>Channel</b>
+               <input type=text name="<tmpl_var name=camera_nbr>:channel" value="<tmpl_var name=channel>" size=2>
+               <!--<b><tmpl_var name=protocol></b> -->
+               
                </center>
             </td>
             <td align=center>

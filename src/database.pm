@@ -45,31 +45,42 @@ camera_name CHAR UNIQUE,
 server CHAR NOT NULL,
 ip_addr CHAR DEFAULT NULL,
 port CHAR DEFAULT NULL,
+channel CHAR DEFAULT "1",
 user CHAR DEFAULT NULL,
 password CHAR DEFAULT NULL,
 wan_access CHAR(1) DEFAULT NULL,
-sql_log_movie,
-sql_log_picture,
-sql_log_snapshot,
-sql_log_timelapse,
-lightswitch,
+/* 
+    sql_log_movie,
+    sql_log_picture,
+    sql_log_snapshot,
+    sql_log_timelapse,
+    lightswitch,
+*/
 width,
 height,
-max_changes,
-max_movie_time,
-snapshot_interval,
-stream_port,
-netcam_keepalive,
-motion_threshhold,
-motion_noise_level,
+/*
+    max_changes,
+    max_movie_time,
+    snapshot_interval,
+    stream_port,
+    netcam_keepalive,
+    motion_threshhold,
+    motion_noise_level,
+*/
 motion_area_detect,
 motion_mask_file,
-minimum_motion_frames,
-picture_output,
+/*
+    minimum_motion_frames,
+    picture_output,
+*/
 movie_output,
-timelapse_interval,
-rotate_image,
-options CHAR
+/*
+    timelapse_interval,
+*/
+rotate_image
+/*
+    options CHAR
+*/
 );
 
 drop table if exists images;
@@ -123,7 +134,6 @@ dvr_user,
 dvr_password,
 ethernet_port,
 camera_ethernet_port,
-camera_ip,
 camera_subnet_mask
 );
 
@@ -139,17 +149,11 @@ CREATE TABLE trusted_ip (
 ip CHAR PRIMARY KEY
 );
 
-
-drop table if exists camera_type;
-CREATE TABLE camera_type (
-name PRIMARY KEY,
-tid INTEGER
-);
-
 drop table if exists camera_template;
 CREATE TABLE camera_template (
-tid INTEGER PRIMARY KEY,
-netcam_url,
+name PRIMARY KEY,
+stream_url,
+snapshot_url,
 netcam_keepalive
 );
 EOF
@@ -160,6 +164,8 @@ sub create_tables
 
     print "creating tables ...\n";
     my $errors = $dt->do_a_block($tables);
+    known_cameras($dt);
+
     $errors += $dt->do_a_block(<<EOF);
 
 insert into config (connection_type, lw_connection_type, lan_http_port, wan_http_port)
@@ -173,18 +179,15 @@ EOF
 
 sub known_cameras
 {
-	my ($dt) = @_;
+	print "inserting known_cameras\n";
+    my ($dt) = @_;
 	$dt->do_a_block(<<EOF);	
 
-	insert into camera_template (tid, netcam_url, netcam_keepalive) values (1, "http://%IPADDR/videostream.cgi?user=%USER&pwd=%PWD", "on");
-	insert into camera_type (name, tid) values ("Foscam", 1);
-	insert into camera_template (tid, netcam_url, netcam_keepalive) values (2, "rtsp://%USER:%PWD@%IPADDR/cam/realmonitor?channel=1&subtype=0", "off");
-	insert into camera_type (name, tid) values ("Amcrest", 2);
-	insert into camera_type (name, tid) values ("SV3C", 2);
-	insert into camera_template (tid, netcam_url, netcam_keepalive) values (3, "http://%IPADDR/cgi-bin/CGIProxy.fcgi?cmd=snapPicture2&usr=%USER&pwd=%PWD", "off");
-	insert into camera_type (name, tid) values ("FoscamHD", 3);
-	insert into camera_template (tid, netcam_url, netcam_keepalive) values (4, "http://%USER:%PWD@%IPADDR/cgi/jpg/image.cgi", "off");
-	insert into camera_type (name, tid) values ("TRENDnet", 4);
+	insert into camera_template (name, stream_url, netcam_keepalive) values ("Foscam",   "http://%IPADDR/videostream.cgi?user=%USER&pwd=%PWD", "on");
+	insert into camera_template (name, stream_url, netcam_keepalive) values ("Amcrest",  "rtsp://%USER:%PWD@%IPADDR/cam/realmonitor?channel=%CHANNEL&subtype=0", "off");
+	insert into camera_template (name, stream_url, netcam_keepalive) values ("FoscamHD", "http://%IPADDR/cgi-bin/CGIProxy.fcgi?cmd=snapPicture2&usr=%USER&pwd=%PWD", "off");
+	insert into camera_template (name, stream_url, netcam_keepalive) values ("TRENDnet", "http://%USER:%PWD@%IPADDR/cgi/jpg/image.cgi", "off");
+	update camera_template set snapshot_url = "http://%USER:%PWD@%IPADDR/c/cgi-bin/snapshot.cgi?type=0&channel=%CHANNEL" where name = "ONVIF";
 EOF
 }
 
@@ -192,25 +195,19 @@ sub apply_patch
 {
     my ($dt) = @_;
     #return;  # remove to use
-    if (see_if_patch_needed($dt, 'camera_type', 'tidxxx'))
+    if (see_if_patch_needed($dt, 'camera_template', 'name'))
     {           
         my $errors = $dt->do_a_block(<<EOF);
-drop table if exists camera_type;
-CREATE TABLE camera_type (
-name PRIMARY KEY,
-tid INTEGER
-);
-
 drop table if exists camera_template;
 CREATE TABLE camera_template (
-tid INTEGER PRIMARY KEY,
-netcam_url,
+name PRIMARY KEY,
+stream_url,
+snapshot_url,
 netcam_keepalive
 );
 EOF
 	known_cameras($dt);
     }
-
 }
 
 sub see_if_patch_needed

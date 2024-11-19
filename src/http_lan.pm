@@ -293,7 +293,7 @@ sub cameras
         {
             my $name = $dt->trim($dt->trim($form{add_camera_name}));
             $name =~ tr/"',/---/;
-            $dt->do("INSERT OR IGNORE INTO cameras (camera_name, server, movie_output, port) values(%s, 'Select server', 0, 'default')", $name );
+            $dt->do("INSERT OR IGNORE INTO cameras (camera_name, server, channel, port) values(%s, 'Select Protocol', '1', 'default')", $name );
         }
         elsif ($form{state} eq "Update" )
         {
@@ -323,14 +323,14 @@ sub cameras
                 $dt->do(<<EOF,
                 UPDATE cameras
                 SET camera_name = %s, wan_access = %s,
-                ip_addr = %s, user = %s, password = %s, port = %s, options = %s, movie_output = %s, motion_area_detect = %s,
-                rotate_image = %s, server = %s, width = %s, height = %s
+                ip_addr = %s, user = %s, password = %s, port = %s,  movie_output = %s, motion_area_detect = %s,
+                rotate_image = %s, server = %s, width = %s, height = %s, channel = %s
                 WHERE camera_nbr = %s
 EOF
                    $name, $form{$camera_nbr.":wan_access"}||"",
-                   $form{$camera_nbr.":ip_addr"},$form{$camera_nbr.":user"},$form{$camera_nbr.":password"},$port, $form{$camera_nbr.":options"},
+                   $form{$camera_nbr.":ip_addr"},$form{$camera_nbr.":user"},$form{$camera_nbr.":password"},$port,
                    $form{$camera_nbr.":log_motion"}?'1':'0', $form{$camera_nbr.":motion_area_detect"},
-                   $form{$camera_nbr.":rotate_image"}, $form{$camera_nbr.":server"}, $width, $height,
+                   $form{$camera_nbr.":rotate_image"}, $form{$camera_nbr.":server"}, $width, $height, $form{$camera_nbr.":channel"},
                    $camera_nbr);
             }
             motion::create_motion_configs($dt);
@@ -340,15 +340,14 @@ EOF
     my $select_server = option_list_types($dt);
     my @cameras = $dt->tmpl_loop_query(<<EOF,
     SELECT cameras.camera_nbr, cameras.camera_name, cameras.server, cameras.port, cameras.wan_access, cameras.ip_addr, 
-    cameras.user, cameras.password, cameras.options,
+    cameras.user, cameras.password, 
     cameras.movie_output, cameras.motion_area_detect, cameras.rotate_image, coalesce(cameras.width,'640'),coalesce(cameras.height,'480'),
-    camera_template.netcam_url
+    camera_template.stream_url, cameras.channel
     FROM cameras
-    LEFT JOIN camera_type ON camera_type.name = cameras.server
-    LEFT JOIN camera_template ON camera_type.tid = camera_template.tid 
+    LEFT JOIN camera_template ON camera_template.name = cameras.server 
     ORDER BY cameras.camera_name
 EOF
-   ( qw (camera_nbr camera_name server port wan_access ip_addr user password options movie_output motion_area_detect rotate_image width height url) ));
+   ( qw (camera_nbr camera_name server port wan_access ip_addr user password  movie_output motion_area_detect rotate_image width height url channel) ));
     my $ip_addr = ip_tools::get_ip_addr($cfg);
     $t->param( cameras => \@cameras );
     foreach my $x (@cameras)
@@ -369,7 +368,10 @@ EOF
       $x->{url} =~ /^([a-z,A-Z]+):/;
       $x->{protocol} = $1;
       delete $x->{url};
-      $x->{servers} = $select_server;
+      $x->{servers} = "<optgroup label='Current protocol'>\n".
+                    "<option value ='".$x->{server}."' selected>".$x->{server}.'</option>\n'.
+                    $select_server;
+      delete $x->{server};
       delete $x->{movie_output};
       $x->{resolution} = $x->{width}.'x'.$x->{height};
       delete $x->{width};
@@ -424,25 +426,15 @@ sub set_timezone
 
 sub option_list_types
 {
-	my ($dt, $tid) = @_;
+	my ($dt) = @_;
 # setup camera types AKA servers
     my @servers;
-    if ($tid)
-    {
-		@servers = $dt->tmpl_loop_query(<<EOF, (qw(name)));
-		select name from camera_type
-		where tid = $tid
-		order by name
+
+	@servers = $dt->tmpl_loop_query(<<EOF, (qw(name desc)));
+    select name from camera_template order by name
 EOF
-	}
-	else
-	{
-		@servers = $dt->tmpl_loop_query(<<EOF, (qw(name desc)));
-    select name from camera_type order by name
-EOF
-	}
     
-    my $select_server = ''; 
+    my $select_server = '<optgroup label="Available protocols">\n'; 
     foreach my $s (@servers)
     {
 		$select_server .= "<option value=".$s->{name}.'> '.$s->{name}.'</option>\n';  
@@ -450,116 +442,75 @@ EOF
 	return $select_server;
 }
 
-
-
 sub template
 {
 	my ($dt, $now, %form) = @_;
 	printf "template: form = %s\n", Dumper \%form;
 	my $t = HTML::Template->new_scalar_ref( html::template(),
             ( xdebug => 1, xstack_debug => 1 ) );
-	
-	my $deleted_name;
-	my $deleted_name_tid;
 	$t->param(add_off_checked => 'checked');
 	if (exists $form{state})
 	{
-		my ($tid, $cmd) = split /\:/, $form{state};
-		printf "tid[%s] cmd[%s]\n",  $tid, $cmd;
-		my $safe_tid = $dt->quote($tid);
+		my ($name, $cmd) = split /\:/, $form{state};
+		printf "name[%s] cmd[%s]\n",  $name, $cmd;
+		my $safe_name = $dt->quote($name);
 		
-		if ($cmd eq "delete_type")
+		if ($cmd eq "delete_template")
 		{
-			printf "delete this[%s]\n", $form{$tid.':type'};			
-			$deleted_name_tid = $tid;
-			$deleted_name = $form{$tid.':type'};
-			my ($rc, $uses) = $dt->get_rec("select count(*) from camera_type where tid = %s and name <> %s", $tid, $deleted_name);
-			# last name for this URL, delete it and place it in add area
-			printf "this many left[%s]\n", $uses;
-			if ($uses > 0)
-			{
-				# just delete this name
-				$deleted_name_tid = $tid;
-				$deleted_name = $form{$tid.':type'};
-				$dt->do("delete from camera_type where tid = %s and name = %s", $tid, $deleted_name); 
-			}
-			else
-			{
-				my ($rc, $del_name, $del_url, $del_keepalive) = $dt->get_rec("select camera_type.name,  camera_template.netcam_url, camera_template.netcam_keepalive
-						from camera_type 
-						join camera_template on camera_template.tid = camera_type.tid
-						where camera_type.tid = %s and camera_type.name = %s", $tid, $deleted_name);
-				# delete both type and url
-				if ($rc)
-				{
-					$dt->do("delete from camera_type where tid = %s and name = %s", $tid, $deleted_name);
-					$dt->do("delete from camera_template where tid = %s", $tid);  
-					# place in add area
-					$t->param(add_name => $del_name);
-					$t->param(add_url => $del_url);
-					if ($del_keepalive eq "on")
-					{
-						$t->param(add_on_checked =>  "checked");
-						$t->param(add_off_checked => "");
-					}
-					else
-					{
-						$t->param(add_off_checked => "checked");
-						$t->param(add_on_checked =>  "");
-					}
-				}															
-			}
-			
-		}
-		elsif ($cmd eq "add_type")		
-		{
-			printf "add this[%s]\n", $form{$tid.':name'};
-			my($stat, $last_tid) = $dt->get_rec("select tid from camera_type where name = %s", $form{$tid.':name'});
-			printf "stat[%s]\n", $stat;
-			if ($stat)
-			{
-				$t->param(show_msg => 1);
-				$t->param(msg => "This name [".$form{$tid.':name'}."] exists");
-			}
-			else
-			{
-				$dt->do("insert into camera_type (tid, name) values(%s,%s)", $tid, $form{$tid.':name'});
-			}			
+            my ($rc, $del_url, $del_keepalive) = $dt->get_rec("select camera_template.stream_url, camera_template.netcam_keepalive
+                    from camera_template
+                    where camera_template.name = %s", $name);
+            if ($rc)
+            {
+                
+                $dt->do("delete from camera_template where name = %s", $name);  
+                # place in add area
+                $t->param(add_name => $name);
+                $t->param(add_stream_url => $del_url);
+                if ($del_keepalive eq "on")
+                {
+                    $t->param(add_on_checked =>  "checked");
+                    $t->param(add_off_checked => "");
+                }
+                else
+                {
+                    $t->param(add_off_checked => "checked");
+                    $t->param(add_on_checked =>  "");
+                }
+            }															
 		}
 		elsif ($cmd eq "update_url")
 		{
-			printf "replace this[%s] keepalive[%s]\n", $form{$tid.':url'}, $form{$tid.':keepalive'};
-			$dt->do("insert or replace into camera_template (tid, netcam_url, netcam_keepalive) values (%s,%s,%s)",
-			 $tid, $form{$tid.':url'}, $form{$tid.':keepalive'} );
+			printf "replace this[%s] keepalive[%s]\n", $form{$name.':url'}, $form{$name.':keepalive'};
+			$dt->do("insert or replace into camera_template (name, stream_url, netcam_keepalive) values (%s,%s,%s)",
+			 $name, $form{$name.':url'}, $form{$name.':keepalive'} );
 		}
 		elsif ($cmd eq "add")
 		{
-			printf "add name[%s] this[%s] keepalive[%s]\n", $form{'add_camera_template_name'}, $form{'add_camera_template_url'}, $form{'add_keepalive'};
+			printf "add name[%s]\n\tstream[%s]\n\tsnapshot[%s] keepalive[%s]\n", $form{'add_camera_template_name'}, 
+                    $form{'add_camera_template_stream_url'},$form{'add_keepalive'};
 			
-			my($stat, $last_tid) = $dt->get_rec("select max(tid) from camera_template");
-			$dt->do("insert into camera_type (tid, name) values(%s,%s)", $last_tid, $form{'add_camera_template_name'});
-            $dt->do("insert into camera_template (tid, netcam_url, netcam_keepalive) values(%s,%s,%s)",
-                 $last_tid, $form{'add_camera_template_url'}, $form{'add_keepalive'});
-			
-			#$last_tid, $form{'add_camera_template_url'}, $form{'add_keepalive'};
-		
-		
+            my ($status) = $dt->do("insert into camera_template (name, stream_url, netcam_keepalive) values(%s,%s,%s)",
+                 $form{'add_camera_template_name'}, $form{'add_camera_template_stream_url'}, $form{'add_keepalive'});
+            if (!$status)
+            {
+                print("error could not add\n");
+                $message = "Problem adding template, is it a duplicate?";
+
+            } 
 		}		
 	}	
 	
 	my @template = $dt->tmpl_loop_query(<<EOF,
-    SELECT camera_template.tid,  camera_template.netcam_url, camera_template.netcam_keepalive
+    SELECT camera_template.name,  camera_template.stream_url, camera_template.netcam_keepalive
     FROM camera_template
-    ORDER BY camera_template.tid 
+    ORDER BY camera_template.name
 EOF
-   ( qw (tid url keepalive) ));
+   ( qw (name url keepalive) ));
     
     my $last_tid = -1;
     foreach my $x (@template)
     {
-		
-		$x->{types} = option_list_types($dt, $x->{tid}); 
-		
 		if ($x->{keepalive} eq "on")
 		{
 			$x->{on_checked} = "checked";
@@ -569,11 +520,12 @@ EOF
 			$x->{off_checked} = "checked";
 		}		
 		delete $x->{keepalive};	
-		if ($deleted_name_tid eq $x->{tid})
-		{
-			$x->{deleted_name} = $deleted_name;
-		}
-	}	
+		#if ($deleted_name_tid eq $x->{tid})
+		#{
+		#	$x->{deleted_name} = $deleted_name;
+		#}
+	}
+    print("submitting template", @template);
 	$t->param(templates => \@template);	
 	return $t;
 }
