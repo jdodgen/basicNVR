@@ -1,5 +1,5 @@
 package database;
-# Copyright 2011 - 2015 by James E Dodgen Jr.  All rights reserved.
+# Copyright 2011 - 2024 by James E Dodgen Jr.  MIT Licence
 
 use DBI;
 use DBTOOLS;
@@ -10,9 +10,8 @@ use Data::Dumper;
 
 #use tools qw (:debug);
 #use constant DEBUG => tools::DEBUG_db;
-
 #printf "testing debug\n" if DEBUG;
-use constant CURRENT_VERSION => 3;
+
 
 sub open
 {
