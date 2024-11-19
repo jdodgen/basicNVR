@@ -1,6 +1,6 @@
 package frownFace;
 require Convert::UU;
-# Copyright 2011 by James E Dodgen Jr.  All rights reserved. 
+# Copyright 2011-2024 by James E Dodgen Jr.  MIT licence. 
 # use Convert::UU qw(uudecode);
 sub get
 {

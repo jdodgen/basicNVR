@@ -1,5 +1,5 @@
 package html;
-# Copyright 2011,2018 by James E Dodgen Jr.  All rights reserved.
+# Copyright 2011,2018 by James E Dodgen Jr.  MIT Licence
 use strict;
 use Carp;
 

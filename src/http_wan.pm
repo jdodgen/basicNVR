@@ -1,5 +1,5 @@
 package http_wan;
-# Copyright 2011 by James E Dodgen Jr.  All rights reserved.
+# Copyright 2011-2024 by James E Dodgen Jr.  MIT Licence.
 use Data::Dumper;
 use IO::Socket;
 use IO::Socket::SSL;

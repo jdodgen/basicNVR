@@ -1,5 +1,5 @@
 package DBTOOLS;
-# Copyright 2011-2017 by James E Dodgen Jr.  All rights reserved.
+# Copyright 2011,2017,2024 by James E Dodgen Jr.  MIT Licence.
 use strict;
 
 require Exporter;

@@ -1,5 +1,5 @@
 # !/usr/bin/perl
-# Copyright 2011, 2012, 2013 by James E Dodgen Jr.  All rights reserved.
+# Copyright 2011, 2012, 2013 by James E Dodgen Jr.  MIT Licence
 
 use Net::SFTP::Foreign;
 use IO::Zlib;

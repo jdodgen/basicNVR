@@ -1,5 +1,5 @@
 # !/usr/bin/perl
-# Copyright 2011-2021 by James E Dodgen Jr.  All rights reserved.
+# Copyright 2011,2021,2024 by James E Dodgen Jr.  MIT Licence
 # use IO::Zlib;
 
 

@@ -1,4 +1,5 @@
 package system_load;
+# copyright 2011 Jim Dodgen MIT Licence
 #use HTML::Template;
 use strict;
 

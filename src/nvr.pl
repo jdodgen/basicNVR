@@ -1,5 +1,5 @@
 #!/usr/bin/perl -I /simplenvr
-# MIT Licence Copyright 2017-2024 by James E Dodgen Jr.  All rights reserved.
+# MIT Licence Copyright 2017-2024 by James E Dodgen Jr.  MIT Licence.
 #
 # this is the cgi script that lives under apache (via a soft link) and provides the visualzation of the recored pictures
 #

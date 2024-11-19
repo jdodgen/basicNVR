@@ -1,6 +1,6 @@
 package favicon;
 require Convert::UU;
-# Copyright 2020 by James E Dodgen Jr.  All rights reserved.
+# Copyright 2020 by James E Dodgen Jr.  MIT Licence.
 # use Convert::UU qw(uudecode);
 sub get
 {
