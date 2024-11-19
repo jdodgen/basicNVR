@@ -198,12 +198,24 @@ sub apply_patch
     if (see_if_patch_needed($dt, 'camera_template', 'name'))
     {           
         my $errors = $dt->do_a_block(<<EOF);
-drop table if exists camera_template;
-CREATE TABLE camera_template (
+drop table if exists new_template;
+CREATE TABLE new_template (
 name PRIMARY KEY,
 stream_url,
 snapshot_url,
 netcam_keepalive
+);
+insert into new_template 
+(name, stream_url, netcam_keepalive)
+select
+camera_type.name, camera_template.netcam_url,
+camera_template.netcam_keepalive
+from camera_template
+join camera_type on camera_type.tid = camera_template.tid;
+
+drop table camera_template;
+alter table new_template rename to camera_template;
+alter table cameras add column channel;
 );
 EOF
 	known_cameras($dt);
