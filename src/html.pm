@@ -582,15 +582,12 @@ my $stuff = <<EOF;
             </td>
             <td align=left>
               <center>
-               <!-- <b><tmpl_var name=server></b><br><br> -->
                <select name=<tmpl_var name=camera_nbr>:server>
                 <tmpl_var name=servers>             
                </select>
                <br><b><tmpl_var name=protocol></b>
-               <br><b>Channel</b>
-               <input type=text name="<tmpl_var name=camera_nbr>:channel" value="<tmpl_var name=channel>" size=2>
-               <!--<b><tmpl_var name=protocol></b> -->
-               
+               <br><b>Channel nbr</b>
+               <br><input type=text name="<tmpl_var name=camera_nbr>:channel" value="<tmpl_var name=channel>" size=2>
                </center>
             </td>
             <td align=center>
