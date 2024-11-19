@@ -27,11 +27,5 @@ sub get
         printf("percent %s,%s,%s\n",$min1, $min5, $min15);
     }
 }
-#my $i = 0;
-#while ($i < 10000000000)
-#{
-    #$i+=1;
-#}
-#get();
 
 1;
