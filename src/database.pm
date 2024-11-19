@@ -181,11 +181,11 @@ sub known_cameras
     my ($dt) = @_;
 	$dt->do_a_block(<<EOF);	
 
-	insert into camera_template (name, stream_url, netcam_keepalive) values ("Foscam",   "http://%IPADDR/videostream.cgi?user=%USER&pwd=%PWD", "on");
-	insert into camera_template (name, stream_url, netcam_keepalive) values ("Amcrest",  "rtsp://%USER:%PWD@%IPADDR/cam/realmonitor?channel=%CHANNEL&subtype=0", "off");
-	insert into camera_template (name, stream_url, netcam_keepalive) values ("FoscamHD", "http://%IPADDR/cgi-bin/CGIProxy.fcgi?cmd=snapPicture2&usr=%USER&pwd=%PWD", "off");
-	insert into camera_template (name, stream_url, netcam_keepalive) values ("TRENDnet", "http://%USER:%PWD@%IPADDR/cgi/jpg/image.cgi", "off");
-	update camera_template set snapshot_url = "http://%USER:%PWD@%IPADDR/c/cgi-bin/snapshot.cgi?type=0&channel=%CHANNEL" where name = "ONVIF";
+	insert or replace into camera_template (name, stream_url, netcam_keepalive) values ("Foscam",   "http://%IPADDR/videostream.cgi?user=%USER&pwd=%PWD", "on");
+	insert or replace into camera_template (name, stream_url, netcam_keepalive) values ("Amcrest",  "rtsp://%USER:%PWD@%IPADDR/cam/realmonitor?channel=%CHANNEL&subtype=0", "off");
+	insert or replace into camera_template (name, stream_url, netcam_keepalive) values ("FoscamHD", "http://%IPADDR/cgi-bin/CGIProxy.fcgi?cmd=snapPicture2&usr=%USER&pwd=%PWD", "off");
+	insert or replace into camera_template (name, stream_url, netcam_keepalive) values ("TRENDnet", "http://%USER:%PWD@%IPADDR/cgi/jpg/image.cgi", "off");
+	update camera_template set snapshot_url = "http://%USER:%PWD@%IPADDR/c/cgi-bin/snapshot.cgi?type=0&channel=%CHANNEL" where name = "Amcrest";
 EOF
 }
 
@@ -213,8 +213,7 @@ join camera_type on camera_type.tid = camera_template.tid;
 
 drop table camera_template;
 alter table new_template rename to camera_template;
-alter table cameras add column channel;
-);
+alter table cameras add column channel char default "1";
 EOF
 	known_cameras($dt);
     }
