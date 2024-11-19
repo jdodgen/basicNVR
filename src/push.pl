@@ -1,4 +1,4 @@
-# !/usr/bin/perl
+#!/usr/bin/perl -I .
 # Copyright 2011,2021,2024 by James E Dodgen Jr.  MIT Licence
 # use IO::Zlib;
 
