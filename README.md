@@ -19,7 +19,11 @@ exmple system screen shots: [basicNVR.com](http://basicNVR.com)
 The system is currently running successfully for several years on an Intel J5005 machine with Ubuntu 18.04.   
 It manages 7 PoE IP cameras.   
 The website (basicNVR.com) is registered.    
-   
+
+### short term changes
+
+Improve url templates.
+
 ### Planned big changes:
 
 Implement pass-through streaming in motion (possibly using motionplus)     
