@@ -437,8 +437,8 @@ my $stuff = <<EOF;
 <tmpl_var name=login_comments>
 </pre>
 <br>
-Templates can have the following:<br>
-%USER, %PWD, %CHANNEL 
+<h3>Templates can have the following:</h3>>
+<h4>%USER, %PWD, %IPADDR, %CHANNEL</h4>
 <br>
 </html>
 
