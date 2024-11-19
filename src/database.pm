@@ -21,7 +21,7 @@ sub open
     PrintError => 1,
     RaiseError => 0,
     ShowErrorStatement => 1,
-    AutoCommit => defined $commit?0:1
+    AutoCommit => defined $commit ? 0:1
     );
     #print "sqlite open ".$sqlite_attr{AutoCommit};
     my $dbh = DBI->connect( "dbi:SQLite:$dbname", "", "", \%sqlite_attr );
@@ -36,7 +36,6 @@ sub open
 }
 
 my $tables = <<EOF;
-
 drop table if exists cameras;
 CREATE TABLE cameras (
 camera_nbr INTEGER PRIMARY KEY,

@@ -436,7 +436,10 @@ my $stuff = <<EOF;
 <tmpl_var name=email_string>
 <tmpl_var name=login_comments>
 </pre>
-<!-- <tmpl_var name=login_comments> -->
+<br>
+Templates can have the following:<br>
+%USER, %PWD, %CHANNEL 
+<br>
 </html>
 
 EOF
