@@ -585,7 +585,8 @@ my $stuff = <<EOF;
                <!-- <b><tmpl_var name=server></b><br><br> -->
                <select name=<tmpl_var name=camera_nbr>:server>
                 <tmpl_var name=servers>             
-               </select><tmpl_var name=protocol>
+               </select>
+               <br><b><tmpl_var name=protocol></b>
                <br><b>Channel</b>
                <input type=text name="<tmpl_var name=camera_nbr>:channel" value="<tmpl_var name=channel>" size=2>
                <!--<b><tmpl_var name=protocol></b> -->
