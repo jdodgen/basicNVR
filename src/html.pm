@@ -589,6 +589,8 @@ my $stuff = <<EOF;
                <br><b><tmpl_var name=protocol></b>
                <br><b>Channel nbr</b>
                <br><input type=text name="<tmpl_var name=camera_nbr>:channel" value="<tmpl_var name=channel>" size=2>
+               <br><b>Subtype</b>
+               <br><input type=text name="<tmpl_var name=camera_nbr>:subtype" value="<tmpl_var name=subtype>" size=2>
                </center>
             </td>
             <td align=center>

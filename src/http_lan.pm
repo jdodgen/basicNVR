@@ -324,13 +324,14 @@ sub cameras
                 UPDATE cameras
                 SET camera_name = %s, wan_access = %s,
                 ip_addr = %s, user = %s, password = %s, port = %s,  movie_output = %s, motion_area_detect = %s,
-                rotate_image = %s, server = %s, width = %s, height = %s, channel = %s
+                rotate_image = %s, server = %s, width = %s, height = %s, channel = %s, subtype = %s
                 WHERE camera_nbr = %s
 EOF
                    $name, $form{$camera_nbr.":wan_access"}||"",
                    $form{$camera_nbr.":ip_addr"},$form{$camera_nbr.":user"},$form{$camera_nbr.":password"},$port,
                    $form{$camera_nbr.":log_motion"}?'1':'0', $form{$camera_nbr.":motion_area_detect"},
-                   $form{$camera_nbr.":rotate_image"}, $form{$camera_nbr.":server"}, $width, $height, $form{$camera_nbr.":channel"},
+                   $form{$camera_nbr.":rotate_image"}, $form{$camera_nbr.":server"}, $width, $height, 
+                   $form{$camera_nbr.":channel"}, $form{$camera_nbr.":subtype"},
                    $camera_nbr);
             }
             motion::create_motion_configs($dt);
@@ -342,12 +343,12 @@ EOF
     SELECT cameras.camera_nbr, cameras.camera_name, cameras.server, cameras.port, cameras.wan_access, cameras.ip_addr, 
     cameras.user, cameras.password, 
     cameras.movie_output, cameras.motion_area_detect, cameras.rotate_image, coalesce(cameras.width,'640'),coalesce(cameras.height,'480'),
-    camera_template.stream_url, cameras.channel
+    camera_template.stream_url, cameras.channel, cameras.subtype
     FROM cameras
     LEFT JOIN camera_template ON camera_template.name = cameras.server 
     ORDER BY cameras.camera_name
 EOF
-   ( qw (camera_nbr camera_name server port wan_access ip_addr user password  movie_output motion_area_detect rotate_image width height url channel) ));
+   ( qw (camera_nbr camera_name server port wan_access ip_addr user password  movie_output motion_area_detect rotate_image width height url channel subtype) ));
     my $ip_addr = ip_tools::get_ip_addr($cfg);
     $t->param( cameras => \@cameras );
     foreach my $x (@cameras)
