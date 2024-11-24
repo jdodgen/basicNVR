@@ -573,10 +573,11 @@ my $stuff = <<EOF;
               <select name="<tmpl_var name=camera_nbr>:resolution">
                 <option value="<tmpl_var name=resolution>" selected><tmpl_var name=resolution> Current
                 <option value="640x480"> 640x480 VGA
-                <option value="1280x720"> 1280x720
+                <option value="1280x960"> 1280x860
                 <option value="1920x1080"> 1920x1080
-                <option value="2304x1296"> 2304x1296
-                <option value="3840x2160"> 3840x2160
+                <option value="2304x1296"> 2304x1296 3mp
+                <option value="2592x1944"> 2592x1944 5mp  
+                <option value="3840x2160"> 3840x2160 8mp
               </select>
               </b>
             </td>
