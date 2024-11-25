@@ -194,7 +194,6 @@ sub apply_patch
 {
     my ($dt) = @_;
     #return;  # remove to use
-     known_cameras($dt);
     if (see_if_patch_needed($dt, 'cameras', 'subtype'))
     {           
         my $errors = $dt->do_a_block(<<EOF);
