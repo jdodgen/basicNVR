@@ -186,7 +186,7 @@ sub known_cameras
 	insert or replace into camera_template (name, stream_url, netcam_keepalive) values ("Amcrest",  "rtsp://%USER:%PWD@%IPADDR/cam/realmonitor?channel=%CHANNEL&subtype=%SUBTYPE", "off");
 	insert or replace into camera_template (name, stream_url, netcam_keepalive) values ("FoscamHD", "http://%IPADDR/cgi-bin/CGIProxy.fcgi?cmd=snapPicture2&usr=%USER&pwd=%PWD", "off");
 	insert or replace into camera_template (name, stream_url, netcam_keepalive) values ("TRENDnet", "http://%USER:%PWD@%IPADDR/cgi/jpg/image.cgi", "off");
-	update camera_template set snapshot_url = "http://%USER:%PWD@%IPADDR/c/cgi-bin/snapshot.cgi?type=0&channel=%CHANNEL" where name = "Amcrest";
+	update camera_template set snapshot_url = "http://%USER:%PWD@%IPADDR/c/cgi-bin/snapshot.cgi?type=%SUBTYPE&channel=%CHANNEL" where name = "Amcrest";
 EOF
 }
 
@@ -194,11 +194,13 @@ sub apply_patch
 {
     my ($dt) = @_;
     #return;  # remove to use
+     known_cameras($dt);
     if (see_if_patch_needed($dt, 'cameras', 'subtype'))
     {           
         my $errors = $dt->do_a_block(<<EOF);
 alter table cameras add column subtype char default "0";
 EOF
+        known_cameras($dt);
     }
     if (see_if_patch_needed($dt, 'camera_template', 'name'))
     {           
