@@ -8,7 +8,7 @@ It offers features like:
 Motion detection recording    
 File management with automatic deletion    
 SQLite database for recording information    
-User interface for browsing recordings    
+User interface for simple browsing recordings, by date and time with video consolodation as requested.    
 Admin interface for configuration    
 HTTP API access for getting JPEGs (used by [AlertAway](https://github.com/jdodgen/MQTT-home/tree/main/linux/alertaway) for example)  
 
