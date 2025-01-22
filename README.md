@@ -22,10 +22,11 @@ The website (basicNVR.com) is registered.
 
 ### short term changes
 
+SSH Tunnel check in watchdog.    
 Improve url templates.
 
-### Planned big changes:
-
+### Future changes:
+Upgrade Motion.    
 Implement pass-through streaming in motion (possibly using motionplus)     
 Develop a tool (HTML) for creating "motion control masks"    
 Add internal communication to MQTT in addition to current HTTP.     
