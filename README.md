@@ -34,7 +34,7 @@ Design website content for basicNVR.com
 
 ### Additional Notes:
 
-This system has gone through several iterations, starting with USB webcams and coaxial CCTV cameras before transitioning to fully utilizing ONVIF/RTSP cameras.
+This system has gone through several iterations, starting with USB webcams and coaxial CCTV cameras before transitioning to fully utilizing ONVIF/RTSP IP cameras.
 Some legacy stuff can still be used but may go away.
 
 
