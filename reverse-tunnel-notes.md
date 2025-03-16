@@ -65,7 +65,7 @@ sshpass -p <password> ssh -vNR 0.0.0.0:9003:localhost:9003  jim@<remote ip addre
 
 when you have a clean ssh -- now test with simple query.
 
-```curl http://<remote ip address>:9003```
+```curl http://yourserver:port```
 
 if all this works as expected it can be run as a daemon
 setting up a daemon is only after testing for hours. 
@@ -73,26 +73,14 @@ incomplete configuration causes ssh to go into a never ending loop
 
 Change the ssh to autossh see: [https://www.harding.motd.ca/autossh/]
 #
-Now create a .service file for systemd and place it here: 
+Now create the service files for systemd: 
 ```
-sudo vi /etc/systemd/system/autossh-vps-9003.service   
+sudo vi /etc/systemd/system/autossh-to_server.service   
 sudo systemctl daemon-reload   
-sudo systemctl restart autossh-vps-9003.service   
+sudo systemctl restart autossh-to_server.service   
 ```
 note change "ExitOnForwardFailure=yes"  to "no" after you get it working
-```
-[Unit]
-Description=Persistent tunnel from localhost port 9003 to <remote ip address> port 9003  (autossh)
-After=network.target
-After=network-online.target ssh.service
 
-[Service]
-User=root
-ExecStart=/usr/bin/sshpass -p remote-password /usr/bin/autossh -M 0 -o "ExitOnForwardFailure=yes"  -o "ServerAliveInterval 30" -o "ServerAliveCountMax 3" -NR 0.0.0.0:9003:localhost:9003  jim@<remote ip address>
-
-[Install]
-WantedBy=multi-user.target
-```
 the above does not seem to restart the tunnel after reboot it works fine and recovers from tunnel breaking     
 so I run another service that checks the connection and does a restart if it has failed 
 see check_tunnel_and_restart.py  
