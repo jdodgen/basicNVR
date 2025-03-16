@@ -136,9 +136,10 @@ good information here: [https://pesin.space/posts/2020-10-16-autossh-systemd/]
 
 when things break
 ```
-sudo systemctl status   autossh-vps-9003.service
-sudo systemctl start   autossh-vps-9003.service
-sudo systemctl restart autossh-vps-9003.service
+sudo systemctl status   watchdog_tunnel.service
+udo systemctl  status   autossh-vps-9003.service
+sudo systemctl restart  watchdog_tunnel.service
+sudo systemctl restart  autossh-vps-9003.service
 sudo systemctl daemon-reload
 ```
 
