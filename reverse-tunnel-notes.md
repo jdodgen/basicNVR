@@ -1,4 +1,6 @@
 # Notes on setting up a ssh Reverse tunnel
+## this is generic and allows edge servers to have a port on the Internet via a server/VPS.
+## Tested on:  18.04 LTS 
 
 basicNVR serves snapshot that are typically accessed by 
 setting up "port forwarding" of port 9003 on the router that interfaces the Internet.   
@@ -116,7 +118,7 @@ tunnel shouild be installed an running now
 ## tools area
 find prcesses on a socket
 ```
-netstat --all --program | grep '9003'
+netstat --all --program | grep '9003' ore what ever port you want
 netstat -lntn
 ```
 good information here: [https://pesin.space/posts/2020-10-16-autossh-systemd/]   
