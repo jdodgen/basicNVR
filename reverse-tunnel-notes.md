@@ -75,31 +75,55 @@ Change the ssh to autossh see: [https://www.harding.motd.ca/autossh/]
 #
 Now create a .service file for systemd and place it here: 
 ```
-/etc/systemd/system/autossh-vps-9003.service
+sudo vi /etc/systemd/system/autossh-vps-9003.service   
+sudo systemctl daemon-reload   
+sudo systemctl restart autossh-vps-9003.service   
 ```
 note change "ExitOnForwardFailure=yes"  to "no" after you get it working
 ```
 [Unit]
 Description=Persistent tunnel from localhost port 9003 to <remote ip address> port 9003  (autossh)
 After=network.target
+After=network-online.target ssh.service
+
 [Service]
-User=basicnvr
+User=root
 ExecStart=/usr/bin/sshpass -p remote-password /usr/bin/autossh -M 0 -o "ExitOnForwardFailure=yes"  -o "ServerAliveInterval 30" -o "ServerAliveCountMax 3" -NR 0.0.0.0:9003:localhost:9003  jim@<remote ip address>
+
+[Install]
+WantedBy=multi-user.target
+```
+the above does not seem to restart the tunnel after reboot it works fine and recovers from tunnel breaking     
+so I run another service that checks the connection and does a restart if it has failed 
+see check_tunnel_and_restart.py  
+
+sudo vi /etc/systemd/system/watchdog_tunnel.service
+```
+[Unit]
+Description=check and restart tunnel service
+
+[Service]
+User=root
+ExecStart=/usr/bin/python3 /home/simplenvr/check_tunnel_and_restart.py
+
 [Install]
 WantedBy=multi-user.target
 ```
 
+
 then activate it
 ```
-systemctl daemon-reload
-systemctl enable autossh-vps-9003.service
-systemctl start autossh-vps-9003.service
+sudo systemctl daemon-reload
+sudo systemctl restart watchdog_tunnel.service
+
+sudo systemctl enable autossh-vps-9003.service
+sudo systemctl start autossh-vps-9003.service
 ```
 
 test with ```curl http://<remote ip address>:9003```
 
 tunnel shouild be installed an running now
-
+## I have had a few failuers that I have figured out.  
 
 ## tools area
 find prcesses on a socket
