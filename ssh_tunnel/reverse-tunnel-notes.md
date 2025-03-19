@@ -1,6 +1,6 @@
 # Notes on setting up a ssh Reverse tunnel
 ## this is generic and allows edge servers to have a port on the Internet via a server/VPS.
-## Tested on:  18.04 LTS 
+## Tested on:  18.04 LTS in 2025
 
 basicNVR serves snapshot that are typically accessed by 
 setting up "port forwarding" of port 9003 on the router that interfaces the Internet.   
@@ -78,7 +78,10 @@ Change the ssh to autossh see: [https://www.harding.motd.ca/autossh/]
 Now create the service files for systemd: 
 ```
 sudo vi /etc/systemd/system/autossh-to_server.service   
-sudo systemctl daemon-reload   
+sudo systemctl daemon-reload 
+udo systemctl enable autossh-to_server.service
+udo systemctl start autossh-to_server.service 
+
 sudo systemctl restart autossh-to_server.service   
 ```
 note change "ExitOnForwardFailure=yes"  to "no" after you get it working
@@ -86,28 +89,16 @@ note change "ExitOnForwardFailure=yes"  to "no" after you get it working
 the above does not seem to restart the tunnel after reboot it works fine and recovers from tunnel breaking     
 so I run another service that checks the connection and does a restart if it has failed 
 see check_tunnel_and_restart.py  
-
+```
 sudo vi /etc/systemd/system/watchdog_tunnel.service
 ```
-[Unit]
-Description=check and restart tunnel service
-
-[Service]
-User=root
-ExecStart=/usr/bin/python3 /home/simplenvr/check_tunnel_and_restart.py
-
-[Install]
-WantedBy=multi-user.target
-```
-
-
 then activate it
 ```
 sudo systemctl daemon-reload
-sudo systemctl restart watchdog_tunnel.service
+sudo systemctl enable  watchdog_tunnel.service
+sudo systemctl start   watchdog_tunnel.service
 
-sudo systemctl enable autossh-vps-9003.service
-sudo systemctl start autossh-vps-9003.service
+sudo systemctl restart watchdog_tunnel.service
 ```
 
 test with ```curl http://<remote ip address>:9003```
