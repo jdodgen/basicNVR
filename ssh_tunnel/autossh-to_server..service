@@ -1,0 +1,13 @@
+[Unit]
+Description=Persistent tunnel from localhost port 8000 to your server port 8000  (autossh)
+Wants=network-online.target.wants
+After=network.target network-online.target
+
+[Service]
+User=simplenvr
+ExecStart=/usr/bin/sshpass -p <pw> /usr/bin/autossh -M 0 -o "ExitOnForwardFailure=no"  -o "ServerAliveInterval=30" -o "ServerAliveCountMax=3" -NR 0.0.0.0:9003:localhost:8000  you@server
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

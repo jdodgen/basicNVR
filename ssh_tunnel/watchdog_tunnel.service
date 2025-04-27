@@ -1,0 +1,9 @@
+[Unit]
+Description=check and restart tunnel service
+
+[Service]
+User=root
+ExecStart=/usr/bin/python3 /home/simplenvr/check_tunnel_and_restart.py
+
+[Install]
+WantedBy=multi-user.target

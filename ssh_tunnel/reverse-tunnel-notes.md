@@ -1,4 +1,6 @@
 # Notes on setting up a ssh Reverse tunnel
+## this is generic and allows edge servers to have a port on the Internet via a server/VPS.
+## Tested on:  18.04 LTS in 2025
 
 basicNVR serves snapshot that are typically accessed by 
 setting up "port forwarding" of port 9003 on the router that interfaces the Internet.   
@@ -65,7 +67,7 @@ sshpass -p <password> ssh -vNR 0.0.0.0:9003:localhost:9003  jim@<remote ip addre
 
 when you have a clean ssh -- now test with simple query.
 
-```curl http://<remote ip address>:9003```
+```curl http://yourserver:port```
 
 if all this works as expected it can be run as a daemon
 setting up a daemon is only after testing for hours. 
@@ -73,38 +75,41 @@ incomplete configuration causes ssh to go into a never ending loop
 
 Change the ssh to autossh see: [https://www.harding.motd.ca/autossh/]
 #
-Now create a .service file for systemd and place it here: 
+Now create the service files for systemd: 
 ```
-/etc/systemd/system/autossh-vps-9003.service
+sudo vi /etc/systemd/system/autossh-to_server.service   
+sudo systemctl daemon-reload 
+udo systemctl enable autossh-to_server.service
+udo systemctl start autossh-to_server.service 
+
+sudo systemctl restart autossh-to_server.service   
 ```
 note change "ExitOnForwardFailure=yes"  to "no" after you get it working
-```
-[Unit]
-Description=Persistent tunnel from localhost port 9003 to <remote ip address> port 9003  (autossh)
-After=network.target
-[Service]
-User=basicnvr
-ExecStart=/usr/bin/sshpass -p remote-password /usr/bin/autossh -M 0 -o "ExitOnForwardFailure=yes"  -o "ServerAliveInterval 30" -o "ServerAliveCountMax 3" -NR 0.0.0.0:9003:localhost:9003  jim@<remote ip address>
-[Install]
-WantedBy=multi-user.target
-```
 
+the above does not seem to restart the tunnel after reboot it works fine and recovers from tunnel breaking     
+so I run another service that checks the connection and does a restart if it has failed 
+see check_tunnel_and_restart.py  
+```
+sudo vi /etc/systemd/system/watchdog_tunnel.service
+```
 then activate it
 ```
-systemctl daemon-reload
-systemctl enable autossh-vps-9003.service
-systemctl start autossh-vps-9003.service
+sudo systemctl daemon-reload
+sudo systemctl enable  watchdog_tunnel.service
+sudo systemctl start   watchdog_tunnel.service
+
+sudo systemctl restart watchdog_tunnel.service
 ```
 
 test with ```curl http://<remote ip address>:9003```
 
 tunnel shouild be installed an running now
-
+## I have had a few failuers that I have figured out.  
 
 ## tools area
 find prcesses on a socket
 ```
-netstat --all --program | grep '9003'
+netstat --all --program | grep '9003' ore what ever port you want
 netstat -lntn
 ```
 good information here: [https://pesin.space/posts/2020-10-16-autossh-systemd/]   
@@ -112,9 +117,10 @@ good information here: [https://pesin.space/posts/2020-10-16-autossh-systemd/]
 
 when things break
 ```
-sudo systemctl status   autossh-vps-9003.service
-sudo systemctl start   autossh-vps-9003.service
-sudo systemctl restart autossh-vps-9003.service
+sudo systemctl status   watchdog_tunnel.service
+udo systemctl  status   autossh-vps-9003.service
+sudo systemctl restart  watchdog_tunnel.service
+sudo systemctl restart  autossh-vps-9003.service
 sudo systemctl daemon-reload
 ```
 

@@ -16,6 +16,7 @@ sub task
 	while (1)
 	{
 		checkDiskSpace();
+  		check_ssh_tunnel();
 		sleep $timeToSleep;
 	}
 }
@@ -33,18 +34,11 @@ sub checkDiskSpace
     return 0;
 }
 
-#sub cmper
-#{
-    ###my ($a,$b) = @_;
-    ##print "$a $b ";
-    #$a =~ '^/motion/.*?/(.*$)';
-    #my $aa = $1;
-    #$b =~ '^/motion/.*?/(.*$)';
-    #my $bb = $1;
-    ##print "$aa cmp $bb\n";
-    ##sleep(1);
-    #return $aa cmp $1;
-#}
+sub check_ssh_tunnel()  # TBD
+{
+	# /etc/systemd/system/autossh-vps-9003.service
+	restart_command =  "systemctl restart autossh-vps-9003.service";
+}
 
 sub CheckAndFreeDiskSpace
 {

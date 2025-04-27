@@ -8,7 +8,7 @@ It offers features like:
 Motion detection recording    
 File management with automatic deletion    
 SQLite database for recording information    
-User interface for browsing recordings    
+User interface for simple browsing recordings, by date and time with video consolodation as requested.    
 Admin interface for configuration    
 HTTP API access for getting JPEGs (used by [AlertAway](https://github.com/jdodgen/MQTT-home/tree/main/linux/alertaway) for example)  
 
@@ -22,10 +22,11 @@ The website (basicNVR.com) is registered.
 
 ### short term changes
 
+SSH Tunnel check in watchdog.    
 Improve url templates.
 
-### Planned big changes:
-
+### Future changes:
+Upgrade Motion.    
 Implement pass-through streaming in motion (possibly using motionplus)     
 Develop a tool (HTML) for creating "motion control masks"    
 Add internal communication to MQTT in addition to current HTTP.     
@@ -34,7 +35,7 @@ Design website content for basicNVR.com
 
 ### Additional Notes:
 
-This system has gone through several iterations, starting with USB webcams and coaxial CCTV cameras before transitioning to fully utilizing ONVIF/RTSP cameras.
+This system has gone through several iterations, starting with USB webcams and coaxial CCTV cameras before transitioning to fully utilizing ONVIF/RTSP IP cameras.
 Some legacy stuff can still be used but may go away.
 
 
